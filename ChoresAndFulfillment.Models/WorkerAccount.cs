@@ -10,6 +10,8 @@ namespace ChoresAndFulfillment.Models
         public WorkerAccount()
         {
             AccountBalance = 0;
+            Jobs = new List<Job>();
+            ActiveApplications = new List<WorkerAccountApplication>();
         }
 
         public int Id { get; set; }

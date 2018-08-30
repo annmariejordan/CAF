@@ -8,7 +8,8 @@ namespace ChoresAndFulfillment.Models.Enums
     public enum JobState
     {
         Deactivated =1,
-        Active =2,
-        Finished = 3
+        Hiring =2,
+        Finished = 3,
+        Hired=4
     }
 }

@@ -36,13 +36,13 @@ namespace ChoresAndFulfillment.Controllers
                 _applicationDbContext.
                 EmployerAccounts.Where(a => a.Id == user.EmployerAccountId).
                 Include(a => a.CreatedJobs).First();
-            if (!employerAccount.CreatedJobs.Any(a => a.JobState==JobState.Active))
+            if (!employerAccount.CreatedJobs.Any(a => a.JobState==JobState.Hiring))
             {
                 ViewData["Jobs"] = "<h2>You have no active jobs!</h2>";
                 return View();
             }
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (var job in employerAccount.CreatedJobs.Where(a => a.JobState == JobState.Active))
+            foreach (var job in employerAccount.CreatedJobs.Where(a => a.JobState == JobState.Hiring))
             {
                 stringBuilder.AppendLine("<li>");
                 stringBuilder.AppendLine("<a href=\"/ManageJob/Manage/" + job.Id + "\">" + job.Name + "</a>");

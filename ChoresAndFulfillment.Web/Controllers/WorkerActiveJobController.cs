@@ -97,7 +97,7 @@ namespace ChoresAndFulfillment.Controllers
         }
         private bool IsValidJob(int id)
         {
-            Job job = _applicationDbContext.Jobs.FirstOrDefault(a => a.Id == id && a.JobState == JobState.Active);
+            Job job = _applicationDbContext.Jobs.FirstOrDefault(a => a.Id == id && a.JobState == JobState.Hiring);
             User user = _userManager.GetUserAsync(HttpContext.User).Result;
             if (job != null)
             {

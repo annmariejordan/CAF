@@ -8,7 +8,7 @@ namespace ChoresAndFulfillment.Models
     {
         public Job()
         {
-            this.JobState = JobState.Active;
+            this.JobState = JobState.Hiring;
             this.EmployerConfirmedFinished = false;
             this.WorkerConfirmedFinished = false;
         }

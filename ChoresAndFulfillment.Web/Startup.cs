@@ -15,6 +15,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 
 using ChoresAndFulfillment.Models;
+using ChoresAndFulfillment.Web.Services.Interfaces;
+using ChoresAndFulfillment.Web.Services;
+
 namespace ChoresAndFulfillment
 {
     public class Startup
@@ -51,7 +54,9 @@ namespace ChoresAndFulfillment
                 }
                 )
                 .AddEntityFrameworkStores<CAFContext>();
-            
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUserAndContextRepository, UserAndContextRepository>();
+            services.AddScoped<IListAllJobsService, ListAllJobsService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

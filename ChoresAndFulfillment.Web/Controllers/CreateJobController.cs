@@ -10,23 +10,24 @@ using Microsoft.AspNetCore.Mvc;
 
 
 using ChoresAndFulfillment.Models;
+using ChoresAndFulfillment.Web.Services.Interfaces;
+
 namespace ChoresAndFulfillment.Controllers
 {
     public class CreateJobController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly CAFContext _applicationDbContext;
-        public CreateJobController(UserManager<User> userManager, CAFContext applicationDbContext)
+        IUserAndContextRepository repository;
+        public CreateJobController(IUserAndContextRepository repository)
         {
-            this._userManager = userManager;
-            this._applicationDbContext = applicationDbContext;
+            this.repository = repository;
         }
         [Authorize]
         [HttpGet]
         public IActionResult Index()
         {
-            if (IsWorker())
+            if (repository.IsWorker())
             {
+                ModelState.AddModelError("IsWorker", "You are an employer, not an employer!");
                 return Redirect("/WorkerManagement/Index");
             }
             return View();
@@ -35,9 +36,10 @@ namespace ChoresAndFulfillment.Controllers
         [HttpPost]
         public IActionResult Index(CreateJobViewModel cjvm)
         {
-            var currentUser = _userManager.GetUserAsync(HttpContext.User);
-            if (IsWorker())
+            var currentUser = repository.GetCurrentUser();
+            if (repository.IsWorker())
             {
+                ViewData["Error"] = "You are a worker!";
                 return Redirect("/WorkerManagement/Index");
             }
             if (cjvm.Payment == 0)
@@ -48,33 +50,17 @@ namespace ChoresAndFulfillment.Controllers
             string JobName = cjvm.JobName;
             string Description = cjvm.Description;
             decimal Payment = cjvm.Payment;
-            int accountId = (int)currentUser.Result.EmployerAccountId;
-            //EmployerAccount employerAccount = _applicationDbContext.
-            //    EmployerAccounts.First(a => a.Id == accountId);
-            //employerAccount.UserId = currentUser.Result.Id;
+            int accountId = (int)currentUser.EmployerAccountId;
             Job job = new Job
             {
                 Name = JobName,
                 Description = Description,
                 PayUponCompletion = Payment,
-                JobCreatorId=(int)currentUser.Result.EmployerAccountId
+                JobCreatorId=(int)currentUser.EmployerAccountId
             };
-            _applicationDbContext.Jobs.Add(job);
-            _applicationDbContext.SaveChanges();
+            repository.AddJob(job);
             ViewData["Success"] = "Published job successfully!";
             return View();
-        }
-        private bool IsWorker()
-        {
-            var currentUser = _userManager.GetUserAsync(HttpContext.User).Result;
-            if (currentUser.AccountType == "EmployerAccount")
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
         }
     }
 }

@@ -10,104 +10,86 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using ChoresAndFulfillment.Models;
+using ChoresAndFulfillment.Web.Services.Interfaces;
+
 namespace ChoresAndFulfillment.Controllers
 {
     public class ListAllJobsController : Controller
     {
-        private CAFContext applicationDbContext;
-        private UserManager<User> userManager;
-        public ListAllJobsController(
-            CAFContext applicationDbContext, 
-            UserManager<User> userManager)
+        private IListAllJobsService service;
+
+        public ListAllJobsController(IListAllJobsService service)
         {
-            this.applicationDbContext = applicationDbContext;
-            this.userManager = userManager;
+            this.service = service;
         }
 
         public IActionResult Index()
         {
-            bool isEmployer = false;
-            bool isWorker = false;
-            User currentUser = null;
-            if (User.Identity.IsAuthenticated)
+            ViewData["Jobs"] = this.ToPrintOut();
+            return this.View();
+        }
+        public string ToPrintOut()
+        {
+            if (!service.AnyActiveJobs())
             {
-                currentUser = userManager.GetUserAsync(HttpContext.User).Result;
-                if (currentUser.EmployerAccountId != null)
-                {
-                    isEmployer = true;
-                }else if (currentUser.WorkerAccountId != null)
-                {
-                    isWorker = true;
-                }
+                return "<h1 style=\"text-align:center;\">No jobs found!</h1>";
             }
-            if (!applicationDbContext.Jobs.Any(a=>a.JobState==JobState.Active))
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("<table class=\"table\"\">");
+            stringBuilder.AppendLine("<thead>");
+            stringBuilder.AppendLine("<tr>");
+            stringBuilder.AppendLine("<th scope=\"col\">Job Name</th>");
+            stringBuilder.AppendLine("<th scope=\"col\">Description</th>");
+            stringBuilder.AppendLine("<th scope=\"col\">Job Creator</th>");
+            stringBuilder.AppendLine("<th scope=\"col\">Employer Rating</th>");
+            stringBuilder.AppendLine("<th scope=\"col\">Payment</th>");
+            if (!service.IsEmployer())
             {
-                ViewData["jobs"] = "<h1 style=\"text-align:center;\">No jobs found!</h1>";
+                stringBuilder.AppendLine("<th scope=\"col\">Apply for Job</th>");
             }
-            else
+            stringBuilder.AppendLine("</tr>");
+            stringBuilder.AppendLine("</thead>");
+            stringBuilder.AppendLine("<tbody>");
+
+            foreach (var job in service.ViewAllActiveJobs())
             {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine("<table class=\"table\"\">");
-                stringBuilder.AppendLine("<thead>");
                 stringBuilder.AppendLine("<tr>");
-                stringBuilder.AppendLine("<th scope=\"col\">Job Name</th>");
-                stringBuilder.AppendLine("<th scope=\"col\">Description</th>");
-                stringBuilder.AppendLine("<th scope=\"col\">Job Creator</th>");
-                stringBuilder.AppendLine("<th scope=\"col\">Employer Rating</th>");
-                stringBuilder.AppendLine("<th scope=\"col\">Payment</th>");
-                if (!isEmployer)
+                stringBuilder.AppendLine("<td>" + job.Name + "</td>");
+                stringBuilder.AppendLine("<td>" + job.Description + "</td>");
+                stringBuilder.AppendLine("<td>" + job.JobCreatorName + "</td>");
+                if (job.JobCreatorRating!=null)
                 {
-                    stringBuilder.AppendLine("<th scope=\"col\">Apply for Job</th>");
+                    stringBuilder.AppendLine("<td>" + job.JobCreatorRating + "</td>");
                 }
-                stringBuilder.AppendLine("</tr>");
-                stringBuilder.AppendLine("</thead>");
-                stringBuilder.AppendLine("<tbody>");
-
-                foreach (var job in applicationDbContext.Jobs.Include(job=>job.JobCreator).
-                    ThenInclude(jobCreator=>jobCreator.User).ThenInclude(user=>user.RatingsReceived).Where(job=> job.JobState == JobState.Active))
+                else
                 {
-                    stringBuilder.AppendLine("<tr>");
-                    stringBuilder.AppendLine("<td>"+job.Name+"</td>");
-                    stringBuilder.AppendLine("<td>" + job.Description + "</td>");
-                    stringBuilder.AppendLine("<td>" + job.JobCreator.User.UserName + "</td>");
-                    if (job.JobCreator.User.RatingsReceived.Any())
-                    {
-                        stringBuilder.AppendLine("<td>" + job.JobCreator.User.Rating + "</td>");
-                    }
-                    else
-                    {
-                        stringBuilder.AppendLine("<td>N/A</td>");
-                    }
-                    stringBuilder.AppendLine("<td>" + job.PayUponCompletion+ "</td>");
+                    stringBuilder.AppendLine("<td>N/A</td>");
+                }
+                stringBuilder.AppendLine("<td>" + job.PayUponCompletion + "</td>");
 
-                    if (!isEmployer)
+                if (!service.IsEmployer())
+                {
+                    if (service.IsWorker())
                     {
-                        if (isWorker)
+                        if (service.WorkerAlreadyApplied(job.Id))
                         {
-                            WorkerAccount workerAccount = applicationDbContext.WorkerAccounts.
-                                Where(a => a.Id == currentUser.WorkerAccountId).
-                                Include(a => a.ActiveApplications).First();
-                            if (workerAccount.ActiveApplications.Any(a => a.JobId == job.Id))
-                            {
-                                stringBuilder.AppendLine($"<td>Already applied.</td>");
-                            }
-                            else
-                            {
-                                stringBuilder.AppendLine($"<td><a href=\"/ApplyForJob/Apply/{job.Id}\">Apply For Job</a></td>");
-                            }
+                            stringBuilder.AppendLine($"<td>Already applied.</td>");
                         }
                         else
                         {
                             stringBuilder.AppendLine($"<td><a href=\"/ApplyForJob/Apply/{job.Id}\">Apply For Job</a></td>");
                         }
                     }
-                    stringBuilder.AppendLine("</tr>");
+                    else
+                    {
+                        stringBuilder.AppendLine($"<td><a href=\"/ApplyForJob/Apply/{job.Id}\">Apply For Job</a></td>");
+                    }
                 }
-                stringBuilder.AppendLine("</tbody>");
-                stringBuilder.AppendLine("</table>");
-                ViewData["jobs"] = stringBuilder.ToString();
+                stringBuilder.AppendLine("</tr>");
             }
-            return this.View();
+            stringBuilder.AppendLine("</tbody>");
+            stringBuilder.AppendLine("</table>");
+            return stringBuilder.ToString();
         }
     }
 }

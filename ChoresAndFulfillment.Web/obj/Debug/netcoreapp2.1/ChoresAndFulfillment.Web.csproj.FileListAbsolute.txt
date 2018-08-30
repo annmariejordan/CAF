@@ -13,7 +13,6 @@ C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.csproj.CoreCompileInputs.cache
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.RazorAssemblyInfo.cache
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.RazorAssemblyInfo.cs
-C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.AssemblyInfoInputs.cache
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.AssemblyInfo.cs
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.TagHelpers.input.cache
@@ -84,3 +83,4 @@ C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.csproj.CopyComplete
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.dll
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.pdb
+C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
