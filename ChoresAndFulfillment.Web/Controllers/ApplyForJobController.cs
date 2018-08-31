@@ -10,76 +10,60 @@ using Microsoft.EntityFrameworkCore;
 
 
 using ChoresAndFulfillment.Models;
+using ChoresAndFulfillment.Web.Services.Interfaces;
+using ChoresAndFulfillment.Web.Data.BindModels;
+
 namespace ChoresAndFulfillment.Controllers
 {
     public class ApplyForJobController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly CAFContext _applicationDbContext;
-        public ApplyForJobController(UserManager<User> userManager, CAFContext applicationDbContext)
+        IApplyForJobService service;
+
+        public ApplyForJobController(IApplyForJobService service)
         {
-            this._userManager = userManager;
-            this._applicationDbContext = applicationDbContext;
+            this.service = service;
         }
         [Authorize]
         [HttpGet]
         public IActionResult Apply(int id)
         {
             ViewData["error"] = "";
-            Job job = _applicationDbContext.Jobs.Where(a=>a.Id==id).Include(a=>a.Applicants).First();
-            if (!IsWorker()||job==null)
+            if ((!service.IsWorker())||(!service.JobExists(id)))
             {
                 return Redirect("/");
             }
+            Job job = service.GetJob(id);
             ViewData["JobName"] = job.Name;
             ViewData["NumberOfApplicants"] = job.Applicants.Count;
             return View();
         }
         [Authorize]
         [HttpPost]
-        public IActionResult Apply(int id, string JobApplicationMessage)
+        public IActionResult Apply(ApplyForJobBindModel applyForJobBindModel)
         {
-            User currentUser = _userManager.GetUserAsync(HttpContext.User).Result;
             ViewData["error"] = "";
-            Job job = _applicationDbContext.Jobs.Where(a=>a.Id==id).Include(a=>a.Applicants).First();
-            if (!IsWorker()||job==null)
+            if ((!service.IsWorker()) || (!service.JobExists(applyForJobBindModel.Id)))
             {
                 return Redirect("/");
             }
-            ViewData["NumberOfApplicants"] = job.Applicants.Count;
-            ViewData["JobName"] = job.Name;
-            if (job.Applicants.Any(a => a.WorkerAccountId == currentUser.WorkerAccountId))
+            Job job = service.GetJob(applyForJobBindModel.Id);
+            if (service.AlreadyAppliedForJob(applyForJobBindModel.Id))
             {
                 ViewData["error"] = "You have already applied for this job!";
                 return View();
             }
-            if (string.IsNullOrEmpty(JobApplicationMessage??"".Trim()))
+            if (string.IsNullOrEmpty(applyForJobBindModel.JobApplicationMessage??"".Trim()))
             {
-                ViewData["error"] = "Job Application cannot be empty!";
+                ViewData["error"] = "Job Application must be at least 5 symbols!";
                 return View();
             }
-            WorkerAccountApplication workerAccountApplication = new WorkerAccountApplication()
-            {
-                ApplicationMessage = JobApplicationMessage,
-                JobId = job.Id,
-                WorkerAccountId = (int)currentUser.WorkerAccountId
-            };
-            _applicationDbContext.WorkerAccountApplications.Add(workerAccountApplication);
-            _applicationDbContext.SaveChanges();
+            User currentUser = service.GetCurrentUser();
+            service.SignUpWorkerForJob
+                (currentUser.WorkerAccountId,job.Id,applyForJobBindModel.JobApplicationMessage);
             ViewData["Success"] = "Application sent successfully!";
+            ViewData["NumberOfApplicants"] = job.Applicants.Count;
+            ViewData["JobName"] = job.Name;
             return View();
-        }
-        private bool IsWorker()
-        {
-            var currentUser = _userManager.GetUserAsync(HttpContext.User).Result;
-            if (currentUser.AccountType == "EmployerAccount")
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
         }
     }
 }

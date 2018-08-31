@@ -57,6 +57,8 @@ namespace ChoresAndFulfillment
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUserAndContextRepository, UserAndContextRepository>();
             services.AddScoped<IListAllJobsService, ListAllJobsService>();
+            services.AddScoped<IApplyForJobService, ApplyForJobService>();
+            services.AddScoped<IListWorkerJobsService, ListWorkerJobsService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

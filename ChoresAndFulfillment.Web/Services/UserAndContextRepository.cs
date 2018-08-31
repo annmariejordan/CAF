@@ -3,6 +3,7 @@ using ChoresAndFulfillment.Models;
 using ChoresAndFulfillment.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,14 +35,7 @@ namespace ChoresAndFulfillment.Web.Services
         }
         public bool IsAuthenticated()
         {
-            if (this.httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return this.httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
         }
 
         public bool IsEmployer()
@@ -77,6 +71,16 @@ namespace ChoresAndFulfillment.Web.Services
             {
                 return false;
             }
+        }
+
+        public bool JobExists(int jobId)
+        {
+            return applicationDbContext.Jobs.Any(a => a.Id == jobId);
+        }
+        public Job GetJob(int jobId)
+        {
+            Job job = applicationDbContext.Jobs.Where(a => a.Id == jobId).Include(a => a.Applicants).First();
+            return job;
         }
     }
 }

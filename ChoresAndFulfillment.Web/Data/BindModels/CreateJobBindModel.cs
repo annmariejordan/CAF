@@ -6,9 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ChoresAndFulfillment.Models;
-namespace ChoresAndFulfillment.Data.ViewModels
+namespace ChoresAndFulfillment.Data.BindModels
 {
-    public class CreateJobViewModel
+    public class CreateJobBindModel
     {
         [BindRequired]
         [Required]
@@ -19,7 +19,6 @@ namespace ChoresAndFulfillment.Data.ViewModels
         [BindRequired]
         [Required]
         [DataType(DataType.Currency)]
-        [Range(1,99999)]
         public decimal Payment { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChoresAndFulfillment.Data;
-using ChoresAndFulfillment.Data.ViewModels;
+using ChoresAndFulfillment.Data.BindModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,14 +27,14 @@ namespace ChoresAndFulfillment.Controllers
         {
             if (repository.IsWorker())
             {
-                ModelState.AddModelError("IsWorker", "You are an employer, not an employer!");
+                ViewData["Error"]= "You are an employer, not an employer!";
                 return Redirect("/WorkerManagement/Index");
             }
             return View();
         }
         [Authorize]
         [HttpPost]
-        public IActionResult Index(CreateJobViewModel cjvm)
+        public IActionResult Index(CreateJobBindModel cjvm)
         {
             var currentUser = repository.GetCurrentUser();
             if (repository.IsWorker())
@@ -59,7 +59,6 @@ namespace ChoresAndFulfillment.Controllers
                 JobCreatorId=(int)currentUser.EmployerAccountId
             };
             repository.AddJob(job);
-            ViewData["Success"] = "Published job successfully!";
             return View();
         }
     }

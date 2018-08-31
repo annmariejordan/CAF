@@ -9,9 +9,11 @@ namespace ChoresAndFulfillment.Web.Services.Interfaces
     public interface IUserAndContextRepository
     {
         User GetCurrentUser();
+        Job GetJob(int jobId);
         void AddJob(Job job);
         bool IsAuthenticated();
         bool IsEmployer();
         bool IsWorker();
+        bool JobExists(int jobId);
     }
 }

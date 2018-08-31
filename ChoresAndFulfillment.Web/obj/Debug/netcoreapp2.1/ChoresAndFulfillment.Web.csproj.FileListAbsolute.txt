@@ -69,7 +69,6 @@ C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\Razor\Views\ApplyForJob\Apply.g.cshtml.cs
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\Razor\Views\CreateJob\Index.g.cshtml.cs
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\Razor\Views\ListAllJobs\Index.g.cshtml.cs
-C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\Razor\Views\ListMyJobs\Index.g.cshtml.cs
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\Razor\Views\ManageJob\Delete.g.cshtml.cs
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\Razor\Views\ManageJob\Manage.g.cshtml.cs
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\Razor\Views\WorkerActiveJob\Index.g.cshtml.cs
@@ -84,3 +83,4 @@ C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.dll
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\ChoresAndFulfillment.Web.pdb
 C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
+C:\Users\Vasko\source\repos\Chores_And_Fulfillment\ChoresAndFulfillment.Web\obj\Debug\netcoreapp2.1\Razor\Views\ListWorkerJobs\Index.g.cshtml.cs
